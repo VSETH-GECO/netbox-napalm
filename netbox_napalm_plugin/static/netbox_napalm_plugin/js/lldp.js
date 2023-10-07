@@ -5336,19 +5336,27 @@
           const configuredChassis = getData(row, "td.configured_chassis", "data-chassis");
           const configuredIface = getData(row, "td.configured_interface", "data");
           const interfaceAlias = getInterfaceAlias(configuredIface);
-          const remoteName = neighbor.remote_system_name ?? (neighbor.remote_chassis_id ?? "");
-          const remotePort = neighbor.remote_port_description ?? (neighbor.remote_port ?? "");
-          const neighborDevice = remoteName
-          const neighborIface = remotePort
+          let remoteName = "";
+          if (neighbor.remote_system_name == null || neighbor.remote_system_name === "") {
+            remoteName = neighbor.remote_chassis_id ?? "";
+          } else {
+            remoteName = neighbor.remote_system_name ?? "";
+          }
+          let remotePort = "";
+          if (neighbor.remote_port_description == null || neighbor.remote_port_description === "") {
+            remotePort = neighbor.remote_port ?? "";
+          } else {
+            remotePort = neighbor.remote_port_description ?? "";
+          }
           if (deviceCell !== null) {
-            deviceCell.innerText = neighborDevice;
+            deviceCell.innerText = remoteName;
           }
           if (interfaceCell !== null) {
-            interfaceCell.innerText = neighborIface;
+            interfaceCell.innerText = remotePort;
           }
-          const nonConfiguredDevice = !isTruthy(configuredDevice) && isTruthy(neighborDevice);
-          const validNode = configuredDevice === neighborDevice || configuredChassis === neighborDevice;
-          const validInterface = configuredIface === neighborIface || interfaceAlias === neighborIface;
+          const nonConfiguredDevice = !isTruthy(configuredDevice) && isTruthy(remoteName);
+          const validNode = configuredDevice === remoteName || configuredChassis === remoteName;
+          const validInterface = configuredIface === remoteName || interfaceAlias === remoteName;
           if (nonConfiguredDevice) {
             row.classList.add("info");
           } else if (validNode && validInterface) {
