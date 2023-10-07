@@ -5336,10 +5336,10 @@
           const configuredChassis = getData(row, "td.configured_chassis", "data-chassis");
           const configuredIface = getData(row, "td.configured_interface", "data");
           const interfaceAlias = getInterfaceAlias(configuredIface);
-          const remoteName = neighbor.remote_system_name ?? "";
-          const remotePort = neighbor.remote_port ?? "";
-          const [neighborDevice] = remoteName.split(".");
-          const [neighborIface] = remotePort.split(".");
+          const remoteName = neighbor.remote_system_name ?? (neighbor.remote_chassis_id ?? "");
+          const remotePort = neighbor.remote_port_description ?? (neighbor.remote_port ?? "");
+          const neighborDevice = remoteName
+          const neighborIface = remotePort
           if (deviceCell !== null) {
             deviceCell.innerText = neighborDevice;
           }
